@@ -1,4 +1,6 @@
+package prodcons.v1;
 import java.util.Random;
+
 
 
 public class Producer extends Thread{

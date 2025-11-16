@@ -1,3 +1,4 @@
+package prodcons.v1;
 public class Message {
     String info;
 

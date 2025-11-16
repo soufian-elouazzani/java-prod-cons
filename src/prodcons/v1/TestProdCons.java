@@ -1,3 +1,5 @@
+package prodcons.v1;
+
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
@@ -7,7 +9,7 @@ public class TestProdCons {
         Properties properties = new Properties();
         try {
             properties.loadFromXML(
-                    TestProdCons.class.getClassLoader().getResourceAsStream("options.xml")
+                    TestProdCons.class.getClassLoader().getResourceAsStream("prodcons/v1/options.xml")
             );
         } catch (IOException e) {
             e.printStackTrace();
