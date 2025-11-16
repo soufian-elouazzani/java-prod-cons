@@ -7,7 +7,7 @@ public class ProdConsBuffer implements IProdConsBuffer {
     private int in = 0;    // Next put position
     private int out = 0;   // Next get position
     private int nfull = 0; // Number of occupied slots
-    private int totmsg = 0; // Total messages produced
+    private int totmsg = 0; // Total messages produced .
 
     // Semaphores for synchronization
     private final Semaphore mutex;     // Mutual exclusion
