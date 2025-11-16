@@ -1,7 +1,4 @@
-package prodcons.v1;
-import java.util.Random;
-
-
+package prodcons.v2;
 
 public class Producer extends Thread{
     int qtMsg;
@@ -26,6 +23,7 @@ public class Producer extends Thread{
             } catch (InterruptedException e) {System.out.println(e);}
         }
         System.out.println(getName() + " Finished");
+        buffer.prodsFinished();
     }
     
 }

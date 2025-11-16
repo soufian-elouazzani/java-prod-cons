@@ -1,7 +1,8 @@
-package prodcons.v1;
+package prodcons.v2;
 public class Consumer extends Thread{
     ProdConsBuffer buffer;
     int consTime;
+    Message msg;
     public Consumer(ProdConsBuffer buffer, int consTime){
         this.buffer = buffer;
         this.consTime = consTime;
@@ -10,7 +11,10 @@ public class Consumer extends Thread{
     public void run(){
         while(true){
             try {
-                buffer.get();
+                msg = buffer.get();
+                if(msg == null){
+                    break;
+                }
                 sleep(consTime*10);
             } catch (InterruptedException e) {
                 System.out.println(e);
