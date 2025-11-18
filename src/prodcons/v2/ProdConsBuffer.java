@@ -1,9 +1,6 @@
 package prodcons.v2;
 import java.util.Arrays;
 import static java.lang.Thread.currentThread;
-import static java.lang.Thread.sleep;
-
-
 
 /*
 nfull et nempty

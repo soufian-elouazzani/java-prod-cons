@@ -1,4 +1,4 @@
-package prodcons.v1;
+package prodcons.v5;
 
 public class Producer extends Thread{
     int qtMsg;
@@ -23,6 +23,7 @@ public class Producer extends Thread{
             } catch (InterruptedException e) {System.out.println(e);}
         }
         System.out.println(getName() + " Finished");
+        buffer.prodsFinished();
     }
     
 }
