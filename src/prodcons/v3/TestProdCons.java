@@ -9,7 +9,7 @@ public class TestProdCons {
         Properties properties = new Properties();
         try {
             properties.loadFromXML(
-                    TestProdCons.class.getClassLoader().getResourceAsStream("prodcons/v1/options.xml")
+                    TestProdCons.class.getClassLoader().getResourceAsStream("prodcons/v3/options.xml")
             );
         } catch (IOException e) {
             e.printStackTrace();
