@@ -2,7 +2,7 @@ package prodcons.v3;
 
 
 public class Producer extends Thread{
-    int qtMsg; //
+    int qtMsg;
     ProdConsBuffer buffer;
     Message[]messages;
     int prodTime;
