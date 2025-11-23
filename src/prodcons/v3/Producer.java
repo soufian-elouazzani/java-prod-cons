@@ -23,7 +23,7 @@ public class Producer extends Thread{
                 buffer.put(messages[i]);
             } catch (InterruptedException e) {System.out.println(e);}
         }
-        System.out.println(getName() + " finalizou a produção");
+        System.out.println(getName() + " production is complete");
     }
     
 }
