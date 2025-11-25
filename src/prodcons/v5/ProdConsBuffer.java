@@ -4,21 +4,34 @@ import java.util.Arrays;
 import static java.lang.Thread.currentThread;
 
 /*
-nfull et nempty
-Méthode             Pre-Action              Garde               Post-Action
+nfull
+Méthode             Pre-Action                      Garde                   Post-Action
 
-put(Message m)          -               nfull != bufSz          buffer[in] = m;
-                                                                in = (in + 1) % buffer.length;
-                                                                nfull++;
-                                                                nempty--;
-                                                                count++;
+put(Message m)          -                           nfull != bufSz          buffer[in] = m;
+                                                                            in = (in + 1) % buffer.length;
+                                                                            nfull++;
+                                                                            countMessagesProduced++;
+                                                                            notifyAll();
 
 
-get()                   -               nempty != bufSz         out_aux = buffer[out];
-                                                                buffer[out] = null;
-                                                                out = (out + 1) % buffer.length;
-                                                                nempty++;
-                                                                nfull--;
+get()                   -                           nfull != 0              Message out_aux = buffer[out];
+                                                                            buffer[out] = null;
+                                                                            out = (out + 1) % buffer.length;
+                                                                            nfull--;
+                                                                            notifyAll();
+                                                                            return out_aux;
+
+get(int k)    consumerCollecting = true;            nfull != 0              LOOP:
+                                                                            assistReturn[i] = buffer[out];
+                                                                            buffer[out] = null;
+                                                                            out = (out + 1) % buffer.length;
+                                                                            nfull--;
+                                                                            notifyAll();
+
+                                                                            FIN:
+                                                                            consumerCollecting = false;
+                                                                            notifyAll();
+                                                                            return assistReturn;
  */
 
 
@@ -28,24 +41,17 @@ public class ProdConsBuffer implements IProdConsBuffer {
     **/
     Message []buffer;
     int nfull;
-    int nempty;
     int in = 0;
     int out = 0;
     int totalProd;
     int prodsFin = 0;
-    Message out_aux;
     int countMessagesProduced = 0;
-    int countMessagesConsumed;
     boolean consumerCollecting = false;
-    public ProdConsBuffer(int bufSz){
+
+    public ProdConsBuffer(int bufSz, int totalProd){
         this.buffer = new Message[bufSz];
         this.nfull = 0;
-        this.nempty = bufSz;
-
-    }
-
-    public void setTotalProd(int n){
-        totalProd = n;
+        this.totalProd = totalProd;
     }
 
     public synchronized void put(Message m) throws InterruptedException {
@@ -59,7 +65,6 @@ public class ProdConsBuffer implements IProdConsBuffer {
         buffer[in] = m;
         in = (in + 1) % buffer.length;
         nfull++;
-        nempty--;
         countMessagesProduced++;
         System.out.println(currentThread().getName() + " : PUT : " + Arrays.toString(buffer));
         notifyAll();
@@ -72,8 +77,8 @@ public class ProdConsBuffer implements IProdConsBuffer {
     **/
     //I'm not using this method in OBJECTIF 5 but I added the condition "consumerCollecting" just to be aligned with the method get(int k)
     public synchronized Message get() throws InterruptedException {
-        while(nempty == buffer.length || consumerCollecting){ 
-            if(prodsFin == totalProd && nmsg() == 0){ 
+        while(nfull == 0 || consumerCollecting){ 
+            if(prodsFin == totalProd){ 
                 return null; 
             }
            try {
@@ -83,10 +88,9 @@ public class ProdConsBuffer implements IProdConsBuffer {
            }
         }
         
-        out_aux = buffer[out];
+        Message out_aux = buffer[out];
         buffer[out] = null;
         out = (out + 1) % buffer.length;
-        nempty++;
         nfull--;
         System.out.println(currentThread().getName() + " : GET : " + Arrays.toString(buffer));
         notifyAll();
@@ -109,7 +113,7 @@ public class ProdConsBuffer implements IProdConsBuffer {
         consumerCollecting = true;
 
         for(int i = 0; i < k; i++){    
-            while(nempty == buffer.length){    
+            while(nfull == 0){    
                 if(prodsFin == totalProd){
                     consumerCollecting = false; // there is nothing to collect
                     notifyAll();
@@ -121,7 +125,6 @@ public class ProdConsBuffer implements IProdConsBuffer {
                 try {
                     wait(); // give space in the SC to the producers put messages in the buffer
                 } catch (InterruptedException e) {
-                    consumerCollecting = false;
                     System.out.println(e);
                 }
             }
@@ -130,7 +133,6 @@ public class ProdConsBuffer implements IProdConsBuffer {
             assistReturn[i] = buffer[out];
             buffer[out] = null;
             out = (out + 1) % buffer.length;
-            nempty++;
             nfull--;
             System.out.println(currentThread().getName() + " has the messages: " + Arrays.toString(assistReturn));
             notifyAll();

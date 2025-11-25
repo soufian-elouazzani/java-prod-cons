@@ -33,8 +33,7 @@ public class TestProdCons {
         System.out.println("minProd = " + minProd);
         System.out.println("maxProd = " + maxProd);
 
-        ProdConsBuffer buffer = new ProdConsBuffer(bufSz);
-        buffer.setTotalProd(nProd);
+        ProdConsBuffer buffer = new ProdConsBuffer(bufSz, nProd);
         Random random = new Random();
         int contCons = 0;
         int contProd = 0;

@@ -11,7 +11,7 @@ public class Consumer extends Thread{
         while(true){
             try {
                 buffer.get();
-                sleep(consTime*10);
+                sleep(consTime);
             } catch (InterruptedException e) {
                 System.out.println(e);
             }

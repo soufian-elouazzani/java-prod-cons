@@ -18,7 +18,7 @@ public class Producer extends Thread{
     public void run(){
         for(int i = 0; i < qtMsg; i++){
             try {
-                sleep(prodTime * 10);
+                sleep(prodTime);
                 buffer.put(messages[i]);
             } catch (InterruptedException e) {System.out.println(e);}
         }

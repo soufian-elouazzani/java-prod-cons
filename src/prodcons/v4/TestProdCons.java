@@ -35,7 +35,7 @@ public class TestProdCons {
 
         /*
         buffer -> tableau taille fixe
-        simular tratamento de msg com sleep para o consommateur -> durée moyenne = consTime
+        -> durée moyenne = consTime
         producteur -> nombre aléatoire de messages entre minProd et maxProd
         dure moyenne pour produire -> prodTime
         1 production a la fois e 1 consommation a la fois pour chaque producteur/consommateur

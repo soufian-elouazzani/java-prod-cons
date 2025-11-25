@@ -35,7 +35,7 @@ public class TestProdCons {
 
         /*
         buffer -> tableau taille fixe
-        simuler sleep pour le consommateur -> durée moyenne = consTime
+         -> durée moyenne = consTime
         producteur -> nombre aléatoire de messages entre minProd et maxProd
         dure moyenne pour produire -> prodTime
         1 production a la fois e 1 consommation a la fois pour chaque producteur/consommateur
@@ -52,8 +52,7 @@ public class TestProdCons {
         * so we need to wake up every thread and do them check the conditions inside "get()" again.
         * */
 
-        ProdConsBuffer buffer = new ProdConsBuffer(bufSz);
-        buffer.setTotalProd(nProd);
+        ProdConsBuffer buffer = new ProdConsBuffer(bufSz, nProd);
         Random random = new Random();
         int contCons = 0;
         int contProd = 0;

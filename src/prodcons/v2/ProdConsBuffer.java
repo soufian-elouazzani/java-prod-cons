@@ -3,21 +3,22 @@ import java.util.Arrays;
 import static java.lang.Thread.currentThread;
 
 /*
-nfull et nempty
+nfull
 Méthode             Pre-Action              Garde               Post-Action
 
 put(Message m)          -               nfull != bufSz          buffer[in] = m;
                                                                 in = (in + 1) % buffer.length;
                                                                 nfull++;
-                                                                nempty--;
-                                                                count++;
+                                                                countMessagesProduced++;
+                                                                notifyAll();
 
 
-get()                   -               nempty != bufSz         out_aux = buffer[out];
+get()                   -               nfull != 0              Message out_aux = buffer[out];
                                                                 buffer[out] = null;
                                                                 out = (out + 1) % buffer.length;
-                                                                nempty++;
                                                                 nfull--;
+                                                                notifyAll();
+                                                                return out_aux;
  */
 
 
@@ -27,24 +28,19 @@ public class ProdConsBuffer implements IProdConsBuffer {
     **/
     Message []buffer;
     int nfull;
-    int nempty;
     int in = 0;
     int out = 0;
     int totalProd;
     int prodsFin = 0;
-    Message out_aux;
     int countMessagesProduced = 0;
-    int countMessagesConsumed;
-    public ProdConsBuffer(int bufSz){
+
+    public ProdConsBuffer(int bufSz, int totalProd){
         this.buffer = new Message[bufSz];
         this.nfull = 0;
-        this.nempty = bufSz;
+        this.totalProd = totalProd;
 
     }
 
-    public void setTotalProd(int n){
-        totalProd = n;
-    }
 
     public synchronized void put(Message m) throws InterruptedException {
         while(nfull == buffer.length){
@@ -57,7 +53,6 @@ public class ProdConsBuffer implements IProdConsBuffer {
         buffer[in] = m;
         in = (in + 1) % buffer.length;
         nfull++;
-        nempty--;
         countMessagesProduced++;
         System.out.println(currentThread().getName() + " : PUT : " + Arrays.toString(buffer));
         notifyAll();
@@ -69,7 +64,7 @@ public class ProdConsBuffer implements IProdConsBuffer {
     * is retrieved before M2)
     **/
     public synchronized Message get() throws InterruptedException {
-        while(nempty == buffer.length){
+        while(nfull == 0){
             if(prodsFin == totalProd){
                 return null; //we're gonna use this null to stop the while in Consumer
             }
@@ -79,10 +74,9 @@ public class ProdConsBuffer implements IProdConsBuffer {
                System.out.println(e);
            }
         }
-        out_aux = buffer[out];
+        Message out_aux = buffer[out];
         buffer[out] = null;
         out = (out + 1) % buffer.length;
-        nempty++;
         nfull--;
         System.out.println(currentThread().getName() + " : GET : " + Arrays.toString(buffer));
         notifyAll();

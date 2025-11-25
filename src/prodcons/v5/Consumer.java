@@ -12,7 +12,7 @@ public class Consumer extends Thread{
         this.k = k;
     }
 
-    public void run(){ // TASK: MAKE THIS RUN STOP
+    public void run(){ 
         while(true){
             try {
                 b = buffer.get(k);
@@ -21,7 +21,7 @@ public class Consumer extends Thread{
                         nullProcess = true;
                         break;
                     }
-                    sleep(consTime*10);
+                    sleep(consTime);
                 }
                 if(nullProcess){
                     break;

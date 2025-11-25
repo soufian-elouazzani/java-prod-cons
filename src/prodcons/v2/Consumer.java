@@ -15,7 +15,7 @@ public class Consumer extends Thread{
                 if(msg == null){
                     break;
                 }
-                sleep(consTime*10);
+                sleep(consTime);
             } catch (InterruptedException e) {
                 System.out.println(e);
             }
